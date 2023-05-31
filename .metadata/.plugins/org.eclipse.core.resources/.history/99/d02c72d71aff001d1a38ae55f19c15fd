@@ -1,0 +1,124 @@
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+import java.io.File;
+
+public class CharacterAnimation extends JPanel {
+
+	private BufferedImage[] images1 = new BufferedImage[8];
+    private BufferedImage[] images2 = new BufferedImage[8];
+    private BufferedImage[] currentImages;
+    private int currentImageIndex;
+    private int x = 30;
+    private int y = 300;
+    private int moveSpeed = 5;
+    private boolean movingUp = false;
+    private boolean movingLeft = false;
+    private boolean movingDown = false;
+    private boolean movingRight = false;
+    private Image back;
+
+    public CharacterAnimation() {
+        try {
+        	for (int i = 0; i < images1.length; i++) {
+                images1[i] = ImageIO.read(getClass().getResourceAsStream("/Imagens1/Walk" + (i + 1) + ".png"));
+                images2[i] = ImageIO.read(getClass().getResourceAsStream("/Imagens2/Walk" + (i + 1) + ".png"));
+            }
+            currentImages = images1; // Definindo o array de imagens atual
+            
+    		Image back = new Image("/Back/back.png",false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        
+        // Desenha a imagem de fundo
+        g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), null);
+        
+        // Desenha o personagem
+        g.drawImage(currentImages[currentImageIndex], x, y, 50, 100, null);
+        
+    }
+    
+    public void switchImageSet() {
+        if (currentImages == images1) {
+            currentImages = images2;
+        } else {
+            currentImages = images1;
+        }
+        currentImageIndex = 0; // Reinicia o índice da imagem atual
+    }
+    
+    public void moveUp() {
+        y -= moveSpeed;
+    }
+
+    public boolean moveLeft() { 
+        x -= moveSpeed;
+        if (currentImages == images1) {
+            currentImages = images2;
+        }
+        updateCurrentImageIndex();
+        return true;
+    }
+
+    public void moveDown() {
+        y += moveSpeed;
+    }
+
+    public boolean moveRight() {
+        x += moveSpeed;
+		if (currentImages == images2) {
+            currentImages = images1;
+        }
+        updateCurrentImageIndex();
+        return true;
+    }
+    
+    private void updateCurrentImageIndex() {
+        currentImageIndex++;
+        if (currentImageIndex >= currentImages.length) {
+            currentImageIndex = 0; // Reinicia o índice quando atingir o final do array
+        }
+    }
+
+    public void update() {
+        if (movingUp) {
+            moveUp();
+        }
+        if (movingLeft) {
+            moveLeft();
+        }
+        if (movingDown) {
+            moveDown();
+        }
+        if (movingRight) {
+            moveRight();
+        }
+        repaint();
+    }
+
+    public void setMovingUp(boolean movingUp) {
+        this.movingUp = movingUp;
+    }
+
+    public void setMovingLeft(boolean movingLeft) {
+        this.movingLeft = movingLeft;
+    }
+
+    public void setMovingDown(boolean movingDown) {
+        this.movingDown = movingDown;
+    }
+
+    public void setMovingRight(boolean movingRight) {
+        this.movingRight = movingRight;
+    }
+
+}

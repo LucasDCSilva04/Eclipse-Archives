@@ -1,0 +1,96 @@
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+
+public class CharacterAnimation extends JPanel {
+
+    private BufferedImage[] images = new BufferedImage[8];
+    private int currentImageIndex;
+    private int x = 30;
+    private int y = 30;
+    private int moveSpeed = 5;
+    private boolean movingUp = false;
+    private boolean movingLeft = false;
+    private boolean movingDown = false;
+    private boolean movingRight = false;
+
+    public CharacterAnimation() {
+        try {
+		int j=1;
+            for (int i = 1; i < images.length; i++) {
+            	if(moveRight()==true) {
+            		images[i] = ImageIO.read(getClass().getResourceAsStream("/Imagens1/Walk" + (i + 1) + ".png"));
+            	}
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(images[currentImageIndex], x, y, null);
+    }
+    public void moveUp() {
+        y -= moveSpeed;
+    }
+
+    public boolean moveLeft() { 
+        x -= moveSpeed;
+        if(currentImageIndex<8) {
+        	currentImageIndex++;
+        }if(currentImageIndex==8) {
+        	currentImageIndex=1;
+        }
+        return true;
+    }
+
+    public void moveDown() {
+        y += moveSpeed;
+    }
+
+    public boolean moveRight() {
+        x += moveSpeed;
+        if(currentImageIndex<8) {
+        	currentImageIndex++;
+        }if(currentImageIndex==8) {
+        	currentImageIndex=1;
+        }
+        return true;
+    }
+
+    public void update() {
+        if (movingUp) {
+            moveUp();
+        }
+        if (movingLeft) {
+            moveLeft();
+        }
+        if (movingDown) {
+            moveDown();
+        }
+        if (movingRight) {
+            moveRight();
+        }
+        repaint();
+    }
+
+    public void setMovingUp(boolean movingUp) {
+        this.movingUp = movingUp;
+    }
+
+    public void setMovingLeft(boolean movingLeft) {
+        this.movingLeft = movingLeft;
+    }
+
+    public void setMovingDown(boolean movingDown) {
+        this.movingDown = movingDown;
+    }
+
+    public void setMovingRight(boolean movingRight) {
+        this.movingRight = movingRight;
+    }
+
+}
